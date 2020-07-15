@@ -186,8 +186,9 @@ export const getAllJobsSharedByUser = async (userId: string) => {
             J.lastRefresh AS LastRefresh,
             JT.type AS JobType,
             J.createdBy AS CreatedById,
-            SJ.userId AS SharedWithId,
-            SHARED.firstName || ' '  || SHARED.lastName AS SharedWith
+            U.id AS SharedWithId,
+            OWNER.firstName || ' '  || OWNER.lastName AS CreatedBy,
+            U.firstName || ' '  || U.lastName AS SharedWith
         FROM SharedJobs SJ
         INNER JOIN Users U
             ON U.id = SJ.userId
@@ -196,8 +197,8 @@ export const getAllJobsSharedByUser = async (userId: string) => {
                 AND J.createdBy = ?
         INNER JOIN JobTypes JT
             ON JT.id = J.typeId
-        INNER JOIN Users SHARED
-            ON SHARED.id = SJ.userId
+        INNER JOIN Users OWNER
+            ON OWNER.id = J.createdBy
         ORDER BY J.title ASC
     `
 
